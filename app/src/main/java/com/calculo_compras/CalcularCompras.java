@@ -14,55 +14,42 @@ import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
+/**
+ * Essa classe  tem o objetivo de fazer os calculos das compras em varejo
+ */
 public class CalcularCompras extends AppCompatActivity {
-
+     // Variáveis criadas na linha debaixo são para ativa ou desativa as opções de calculos
      private boolean opcaoTotal =false, operacao =false;
+     // Variáveis feitas na linha de baixo é para armazenar os números digitados e os simbolos das operações
      private  char sinal,digito;
+     // Variáveis contruidas na linha debaixo serve para armazenar os totais dos calculos
      private double todoTotal=0, total_de_todas_compras;
      private int cont=0, operacoes=0;
-
+     //
      private  String dados="";
-     private  final  String arquivo="preferenciaArquivo";
-    private TextView espresso, espressaResultado, num0,num1,num2,num3,num4,num5,num6,num7,num8,num9,digitoClimpar,DIGITO_OFF,DIGITO_OP,CEtUDO
-            ,num_ponto,simbolo_igual,d_soma,d_subtracao,d_multi,d_divisao, todo_Total, totalCompras;
+     // variáveis do tipo TextView para pegar os dados que foi digitados no campo
+    private TextView espresso, espressaResultado,digitoClimpar,DIGITO_OFF,DIGITO_OP,CEtUDO, todo_Total, totalCompras;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calcular_compras);
         getSupportActionBar().hide();
-        espresso = findViewById(R.id.expressao);
 
+        espresso = findViewById(R.id.expressao);
         espressaResultado = findViewById(R.id.ExibirespressaoRecente);
-        num0 = findViewById(R.id.zero);
-        num1 = findViewById(R.id.um);
-        num2 = findViewById(R.id.dois);
-        num3 = findViewById(R.id.tres);
-        num4 = findViewById(R.id.quatro);
-        num5 = findViewById(R.id.cinco);
-        num6 = findViewById(R.id.seis);
-        num7 = findViewById(R.id.sete);
-        num8 = findViewById(R.id.oito);
-        num9 = findViewById(R.id.nove);
         todo_Total =findViewById(R.id.Exibirexpressaodototal);
         CEtUDO = findViewById(R.id.CE);
         digitoClimpar = findViewById(R.id.C_LIMPAR);
          DIGITO_OFF= findViewById(R.id.opcao);
-        num_ponto = findViewById(R.id.ponto);
-        simbolo_igual = findViewById(R.id.igual);
-         d_soma = findViewById(R.id.soma);
-        d_subtracao = findViewById(R.id.subtracao);
-        d_multi = findViewById(R.id.multiplicacao);
-         d_divisao = findViewById(R.id.divisao);
          totalCompras = findViewById(R.id.TotalDasCompres);
-        exibirTotal();
+
+        /**
+         * Método para realizar as ações de armazenamento de caracteres a cada digito informado
+         */
         espresso.addTextChangedListener(new TextWatcher() {
-
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //Antes de ser alterado
-
-               // Toast.makeText(CalcularCompras.this, "Antes de escrever"+s, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -70,21 +57,27 @@ public class CalcularCompras extends AppCompatActivity {
                 //  Laço de repetição para limita a quantidade de simbolos das operações aritimetrica
                 String caracter=espresso.getText().toString();
                 for (int i=0;i<caracter.length();i++){
+                    // Variável cahr para armazenar todos caracters do campos que receber os números
                     char digitos=caracter.charAt(i);
                     if(digitos=='+' || digitos=='-'|| digitos=='/'||digitos=='*'){
+                        // armazenar a quantidade de simbolos da operação de for adicionada
                        operacoes=operacoes+1;
                     }
                 }
-
             }
             @Override
             public void afterTextChanged(Editable s) {
                // depois de escrirto
                 dados=""+s;
                 //Método para evitar error ao executar uma operação apenas com um número e simbolo da operação
-               setaOperacaoCorreta(digito);
+               setaOperacaoCorreta();
+               // Variável para armazenar 7 caracter e impedir que acima dos 7 caracteres não executer o sistema com
+                // um simbola da operação no final
                 String ultimoindex=espresso.getText().toString();
+                //condição caso a já um caracter de alguma operação
                 if(operacoes==1){
+                     // Condições para impedir de ser executado caso  tenha um simbolo da operação no final depois
+                    //  dos setes caracters
                     if((ultimoindex.length()>7 && ultimoindex.endsWith("+"))){
                         espresso.setText(ultimoindex.substring(0,ultimoindex.length()-1));
                     } else if (ultimoindex.length()>7 && ultimoindex.endsWith("-")) {
@@ -95,63 +88,104 @@ public class CalcularCompras extends AppCompatActivity {
                         espresso.setText(ultimoindex.substring(0,ultimoindex.length()-1));
                     }
                 }
-
-                //Condição para saber se contém dos simbolos da operaçõo
+                //Condição para saber se contém dois simbolos da operaçõo
                 if(operacoes==2){
                    // Toast.makeText(CalcularCompras.this, ""+operacoes+"vezes", Toast.LENGTH_SHORT).show();
                     String index=espresso.getText().toString();
                     espresso.setText(index.substring(0,index.length()-1));
-
                 }
-              //  Toast.makeText(CalcularCompras.this, "Tamanho "+dados.length()+" qtd"+operacoes , Toast.LENGTH_SHORT).show();
+                // Zerando a variável
                 operacoes=0;
             }
         });
     }
 
 
-
+    /**
+     * Método para seta o número 0 ao campo de texto
+     * @param view
+     */
     public void setaNumero0(View view){
         digito='0';
         espresso.setText(espresso.getText()+"0");
     }
+    /**
+     * Método para seta o número 1 ao campo de texto
+     * @param view
+     */
     public void setaNumero1(View view){
         digito='1';
         espresso.setText(espresso.getText()+"1");
     }
+    /**
+     * Método para seta o número 2 ao campo de texto
+     * @param view
+     */
     public void setaNumero2(View view){
         espresso.setText(espresso.getText()+"2");
         digito='2';
     }
+    /**
+     * Método para seta o número 3 ao campo de texto
+     * @param view
+     */
     public void setaNumero3(View view){
         digito='3';
         espresso.setText(espresso.getText()+"3");
     }
+    /**
+     * Método para seta o número 4 ao campo de texto
+     * @param view
+     */
     public void setaNumero4(View view){
         digito='4';
         espresso.setText(espresso.getText()+"4");
     }
+    /**
+     * Método para seta o número 5 ao campo de texto
+     * @param view
+     */
     public void setaNumero5(View view){
         digito='5';
         espresso.setText(espresso.getText()+"5");
     }
+    /**
+     * Método para seta o número 6 ao campo de texto
+     * @param view
+     */
     public void setaNumero6(View view){
         digito='6';
         espresso.setText(espresso.getText()+"6");
     }
+    /**
+     * Método para seta o número 7 ao campo de texto
+     * @param view
+     */
     public void setaNumero7(View view){
         digito='7';
         espresso.setText(espresso.getText()+"7");
     }
+    /**
+     * Método para seta o número 8 ao campo de texto
+     * @param view
+     */
     public void setaNumero8(View view){
         digito='8';
         espresso.setText(espresso.getText()+"8");
     }
+    /**
+     * Método para seta o número 9 ao campo de texto
+     * @param view
+     */
     public void setaNumero9(View view){
         digito='9';
         espresso.setText(espresso.getText()+"9");
     }
 
+    /**
+     * Método para executar uma opção de calculos
+     * @param view
+     */
     public void opcao(View view){
         cont++;
         if(cont==1){
@@ -162,18 +196,25 @@ public class CalcularCompras extends AppCompatActivity {
         }
 
     }
+    //  classe DecimaFormat para colocar os valores em casas decimais
     DecimalFormat decimalFormat  = new DecimalFormat("#,##0.00");
+
+    /**
+     * Método para seta o sinal de ponto ao campo da operação
+     * @param view
+     */
     public void setaPonto(View view){
         sinal='.';
-
         if(espresso.getText().toString().isEmpty()){
-
         }else{
             espresso.setText(espresso.getText()+".");
         }
-
     }
 
+    /**
+     *  Método para executar o calculor ao clicar no botão igual
+     * @param view
+     */
     public void setaIgual(View view){
 
         if(espresso.getText().toString().isEmpty()){
@@ -193,12 +234,21 @@ public class CalcularCompras extends AppCompatActivity {
             valorTotal(sinal);
         } }
     }
-    //Método para calculor os valores conforme o sinal passado no paramentro
+
+    /**
+     * Método para calculor os valores conforme o sinal passado no paramentro
+     * @param sinal
+     * @return O total
+     */
     public double valorTotal(char sinal){
         //Variavel para armazenar o total de cada operação
         double resultado=0;
+        // condição para saber se os sinal das operações estão corretas
         if(operacao==true){
+            // caso não esteja nada acontecer
         }else{
+            // caso esteja será executado o calculor
+
         // condição para as opções
         if(DIGITO_OFF.getText().toString().equals("OFF")){
             //Variavel para armazenar o total de cada operação
@@ -220,7 +270,9 @@ public class CalcularCompras extends AppCompatActivity {
                     String []md=espresso.getText().toString().replace("+"," ").split(" ");
                     String p1=md[0];
                     String p2=md[1];
-                    resultado=retornaTodototal(p1,p2,'+');
+                    // Corrigir ação para quando o index 1 tiver com sinal de ponto
+                        resultado=retornaTodototal(p1,p2,'+');
+
                     break;
                 }
                 case '*':
@@ -311,15 +363,21 @@ public class CalcularCompras extends AppCompatActivity {
         // retorna o total da operação que foi executada
         return resultado;
     }
-    DecimalFormat df  = new DecimalFormat("#,##0.00");
 
+    /**
+     * Método  para calcular as operações comforme os valores e um sinal da operação passada nos parametros
+     * @param p1
+     * @param p2
+     * @param sinal
+     * @return Todor total calculado pelo sistema
+     */
     public  double retornaTodototal(String p1,String p2, char sinal){
         if(sinal=='+'){
             double valorP1 =Double.parseDouble(p1);
             double valorP2 =Double.parseDouble(p2);
             double total=valorP1+valorP2;
           //  String ttl=df.format(total);
-            espressaResultado.setText(""+espresso.getText().toString());
+            espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
 
             if(opcaoTotal){
@@ -347,12 +405,11 @@ public class CalcularCompras extends AppCompatActivity {
             double valorP1 =Double.parseDouble(p1);
             double valorP2 =Double.parseDouble(p2);
             double total=valorP1-valorP2;
-            espressaResultado.setText(""+espresso.getText().toString());
+            espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
                 String opTotalCompras=decimalFormat.format(total_de_todas_compras);
-             //   guardaTotal(opTotalCompras);
                 totalCompras.setText("R$ "+opTotalCompras);
                 String opTotalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+opTotalRc);
@@ -368,14 +425,12 @@ public class CalcularCompras extends AppCompatActivity {
             double valorP1 =Double.parseDouble(p1);
             double valorP2 =Double.parseDouble(p2);
             double total=valorP1/valorP2;
-            espressaResultado.setText(""+espresso.getText().toString());
+            espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
                 String optotalCps=decimalFormat.format(total_de_todas_compras);
-            //    guardaTotal(optotalCps);
                 totalCompras.setText("R$ "+optotalCps);
-            //    guardaTotal(optotalCps);
                 String totalNormal=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalNormal);
                 espresso.setText("");
@@ -390,7 +445,7 @@ public class CalcularCompras extends AppCompatActivity {
             double valorP1 =Double.parseDouble(p1);
             double valorP2 =Double.parseDouble(p2);
             double total=valorP1*valorP2;
-            espressaResultado.setText(""+espresso.getText().toString());
+            espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
             if(opcaoTotal){
               /*  double valortotal=total_de_todas_compras+todoTotal;
@@ -413,24 +468,22 @@ public class CalcularCompras extends AppCompatActivity {
         }
         return total_de_todas_compras;
     }
-    public boolean setaOperacaoCorreta(char num){
-       String muilt="*",subtracao="-",divisao="/",adicao="+";
+
+    /**
+     * Método para corrigir os calculos caso esteja incorretos
+     * @return
+     */
+    public void setaOperacaoCorreta(){
        boolean verificar=false;
-/*
-        if(digitos.equals(num+""+divisao+sinal)|| digitos.equals(num+""+muilt+sinal)
-                || digitos.equals(num+""+subtracao+sinal)|| digitos.equals(num+""+adicao+sinal)||
-                digitos.equals(num+""+sinal+sinal)) {
-            String dados=espresso.getText().toString();
-            espresso.setText(dados.substring(0,dados.length()-1));
-        }*/
             String  opcao=espresso.getText().toString();
             if (opcao.contains("..") ||opcao.endsWith(sinal+".") || opcao.endsWith("."+sinal)){
                 espresso.setText(opcao.substring(0,opcao.length()-1));
-                verificar=true;
+                operacao=true;
             }else {
                 verificar=false;
                 operacao=false;
             }
+
             String texto=espresso.getText().toString();
         if(texto.equals(digito+""+sinal)){
             operacao=true;
@@ -439,18 +492,27 @@ public class CalcularCompras extends AppCompatActivity {
         }else {
             operacao=false;
         }
-        return verificar;
     }
+
+    /**
+     * Método para limpar por cada caracteres
+     * @param view
+     */
     public void setaLimpar(View view){
         String  dgt=espresso.getText().toString();
         if(dgt.isEmpty()){
         }else{
             espresso.setText(dgt.substring(0,dgt.length()-1));
-            espressaResultado.setText("");
+          //  espressaResultado.setText("");
         }
     }
-    public void limparTd(View view){
 
+    /**
+     * Método para limpar todor total das operações que foram feitas
+     * @param view
+     */
+    public void limparTd(View view){
+        // Questionando o usuário para ter certeza que está ciente da exclusão de tudo
        AlertDialog.Builder al = new AlertDialog.Builder(this);
         al.setTitle("Limpar Total");
         al.setMessage("Deseja apagar todo total");
@@ -460,7 +522,8 @@ public class CalcularCompras extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 espressaResultado.setText("");
-                todoTotal=0;
+                total_de_todas_compras=0;
+                totalCompras.setText("R$ "+total_de_todas_compras);
                 todo_Total.setText("");
                 Toast.makeText(CalcularCompras.this, "Todo total excluido!", Toast.LENGTH_SHORT).show();
 
@@ -477,6 +540,11 @@ public class CalcularCompras extends AppCompatActivity {
         al.show();
 
     }
+
+    /**
+     * Método para seta o simbolo da adição ao clicar no botão
+     * @param view
+     */
     public void setaSoma(View view){
 
         if(espresso.getText().toString().isEmpty()){
@@ -486,31 +554,50 @@ public class CalcularCompras extends AppCompatActivity {
             espresso.setText(espresso.getText().toString()+sinal);
         }
     }
+
+    /**
+     * Método para seta o simbolo de subtração ao clicar no botão
+     * @param view
+     */
     public void setaSubtracao(View view){
         if(espresso.getText().toString().isEmpty()){
-
         }else{
             sinal='-';
             espresso.setText(espresso.getText().toString()+sinal);
         }
     }
+
+    /**
+     * Método para deletar todor total das operações
+     * @param view
+     */
     public void deletaTdTotal(View view){
         double zeraTotal=total_de_todas_compras=0;
         String convert=decimalFormat.format(zeraTotal);
-        guardaTotal(convert);
      totalCompras.setText("R$ "+convert);
     }
+
+    /**
+     * Método para quando clicar no campo de todor total seta todor valor no campo da operação
+     * @param view
+     */
     public void setaTotalNaExpressa(View view){
 
         if(total_de_todas_compras==0){
             espresso.setText("");
         }else {
-          //  todo_Total.setText(""+total_de_todas_compras);
+            // Nesse caso vai realizar um tipo de operação especificar com
+            // a variável opcaoTotal recebendo valor de true
             opcaoTotal=true;
          //   double setaTotal=Double.parseDouble(totalCompras.getText().toString().replace("R$ ",""));
             espresso.setText(""+total_de_todas_compras);
         }
     }
+
+    /**
+     * Método para seta o sinal de divisão no campo da operação
+     * @param view
+     */
     public void setaDivisao(View view){
         if(espresso.getText().toString().isEmpty()){
 
@@ -519,6 +606,11 @@ public class CalcularCompras extends AppCompatActivity {
             espresso.setText(espresso.getText().toString()+sinal);
         }
     }
+
+    /**
+     * Método para seta o sinal de multiplicação no campo da operação
+     * @param view
+     */
     public void setaMultiplicacao(View view){
         if(espresso.getText().toString().isEmpty()){
         }else{
@@ -526,34 +618,5 @@ public class CalcularCompras extends AppCompatActivity {
             espresso.setText(espresso.getText().toString()+sinal);
         }
     }
-    public void guardaTotal(String valor){
 
-        SharedPreferences  preferences = getSharedPreferences(arquivo,0);
-        SharedPreferences.Editor editor = preferences.edit();
-         //validar
-        if(totalCompras.getText().toString().isEmpty()){
-        }else {
-          //  String total=totalCompras.getText().toString();
-             editor.putString("total",valor);
-             editor.commit();
-        }
-    }
-      public String converteValores(double todoTotal,double totalRecente){
-          DecimalFormat decimalFormat  = new DecimalFormat("###,##0.00");
-          String tdValor=decimalFormat.format(todoTotal);
-          String totalRc=decimalFormat.format(totalRecente);
-           todo_Total.setText("R$ "+totalRc);
-           totalCompras.setText("R$ "+tdValor);
-          return tdValor;
-     }
-    public void exibirTotal(){
-        SharedPreferences  preferences = getSharedPreferences(arquivo,0);
-        //validar
-        if(preferences.contains("total")){
-           String todoTotal=preferences.getString("total","");
-           totalCompras.setText("R$ "+todoTotal);
-        }else {
-            totalCompras.setText("");
-        }
-    }
 }

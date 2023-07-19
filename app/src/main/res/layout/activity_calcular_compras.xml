@@ -142,7 +142,7 @@
                     android:layout_height="50dp"
                     android:layout_width="140dp"
                     android:textSize="24sp"
-                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:textColor="@color/black"
                     >
                 </TextView>
