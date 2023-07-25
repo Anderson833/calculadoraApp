@@ -30,23 +30,23 @@ public class Bd {
 
     }
 
-    public long inserir(ModelCalculor md){
+    public long inserir(ModelCalculor cal){
         ContentValues valores = new ContentValues();
-        valores.put("total",md.getTotal());
-      return   BD.insert("operacao",null,valores);
+        valores.put("total",cal.getTotal());
+      return   BD.insert("compras",null,valores);
     }
 
     public void deletaDados(ModelCalculor modelo){
-        BD.delete("operacao","id="+modelo.getId(),null);
+        BD.delete("compras","id="+modelo.getId(),null);
     }
     public void deletaTodosDados(){
-        BD.delete("operacao",null,null);
+        BD.delete("compras",null,null);
     }
     public void atualizar(ModelCalculor md){
         BD.isOpen();
         ContentValues valores = new ContentValues();
         valores.put("total",md.getTotal());
-        BD.update("operacao",valores,"id=?",new String[]{String.valueOf(md.getId())});
+        BD.update("compras",valores,"id=?",new String[]{String.valueOf(md.getId())});
         BD.close();
     }
 

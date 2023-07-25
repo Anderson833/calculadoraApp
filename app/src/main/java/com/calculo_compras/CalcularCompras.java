@@ -1,31 +1,28 @@
 package com.calculo_compras;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.DecimalFormat;
 
 /**
  * Essa classe  tem o objetivo de fazer os calculos das compras em varejo
  */
 public class CalcularCompras extends AppCompatActivity {
-     // Variáveis criadas na linha debaixo são para ativa ou desativa as opções de calculos
+
      private boolean opcaoTotal =false, operacao =false;
      // Variáveis feitas na linha de baixo é para armazenar os números digitados e os simbolos das operações
      private  char sinal,digito;
      // Variáveis contruidas na linha debaixo serve para armazenar os totais dos calculos
      private double todoTotal=0, total_de_todas_compras;
      private int cont=0, operacoes=0;
-     //
+     // Variável para fazer as manipulações do banco de dados
+      private Bd BD;
      private  String dados="";
      // variáveis do tipo TextView para pegar os dados que foi digitados no campo
     private TextView espresso, espressaResultado,digitoClimpar,DIGITO_OFF,DIGITO_OP,CEtUDO, todo_Total, totalCompras;
@@ -42,7 +39,7 @@ public class CalcularCompras extends AppCompatActivity {
         digitoClimpar = findViewById(R.id.C_LIMPAR);
          DIGITO_OFF= findViewById(R.id.opcao);
          totalCompras = findViewById(R.id.TotalDasCompres);
-
+        BD = new Bd(this);
         /**
          * Método para realizar as ações de armazenamento de caracteres a cada digito informado
          */
@@ -98,6 +95,9 @@ public class CalcularCompras extends AppCompatActivity {
                 operacoes=0;
             }
         });
+
+     //   bd= Room.databaseBuilder(getApplicationContext(),MyBd.class,"BdCompras").build();
+
     }
 
 
@@ -384,6 +384,10 @@ public class CalcularCompras extends AppCompatActivity {
                 total_de_todas_compras=todoTotal;
                 String valorTotal=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+valorTotal);
+             /*   Dados d = new Dados();
+                d.setTodoTotal(total_de_todas_compras);
+                d.getTodoTotal();
+                bd.daoDados().insert(d);*/
            //   String totalOp=converteValores(total_de_todas_compras,todoTotal);
              //   guardaTotal(valorTotal);
                 String totalRc=decimalFormat.format(todoTotal);
@@ -393,6 +397,8 @@ public class CalcularCompras extends AppCompatActivity {
             }else if(opcaoTotal==false){
                 double tdTotal=total_de_todas_compras=total_de_todas_compras+todoTotal;
                 String Tdvalor=decimalFormat.format(tdTotal);
+                double calculor=Double.parseDouble(espressaResultado.getText().toString());
+              //   salvar(tdTotal);
             //  String valor=converteValores(total_de_todas_compras,todoTotal);
               //  guardaTotal(Tdvalor);
                 totalCompras.setText("R$ "+Tdvalor);
@@ -460,6 +466,7 @@ public class CalcularCompras extends AppCompatActivity {
                 double valortotal=total_de_todas_compras=total_de_todas_compras+todoTotal;
                 String totalCompra=decimalFormat.format(valortotal);
               //  guardaTotal(totalCompra);
+
                 totalCompras.setText("R$ "+totalCompra);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
@@ -600,7 +607,6 @@ public class CalcularCompras extends AppCompatActivity {
      */
     public void setaDivisao(View view){
         if(espresso.getText().toString().isEmpty()){
-
         }else{
             sinal='/';
             espresso.setText(espresso.getText().toString()+sinal);
@@ -618,5 +624,12 @@ public class CalcularCompras extends AppCompatActivity {
             espresso.setText(espresso.getText().toString()+sinal);
         }
     }
+
+  /*  public  void salvar(double valor){
+        ModelCalculor cal = new ModelCalculor();
+        cal.setTotal(valor);
+        long id = bancoCompras.inserir(cal);
+        Toast.makeText(this, "Id salvo "+id, Toast.LENGTH_SHORT).show();
+    }*/
 
 }
