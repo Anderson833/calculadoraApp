@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 public class BdConexao extends SQLiteOpenHelper {
 
-    private  static  final String nomeBd="BdCompras";
+    private  static  final String nomeBd="Conta";
     private  static  final  int version= 19;
     private  String msg;
 

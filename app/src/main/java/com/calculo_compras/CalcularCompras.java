@@ -397,10 +397,9 @@ public class CalcularCompras extends AppCompatActivity {
             }else if(opcaoTotal==false){
                 double tdTotal=total_de_todas_compras=total_de_todas_compras+todoTotal;
                 String Tdvalor=decimalFormat.format(tdTotal);
-                double calculor=Double.parseDouble(espressaResultado.getText().toString());
-              //   salvar(tdTotal);
+               // double calculor=Double.parseDouble(espressaResultado.getText().toString());
+                salvar(tdTotal);
             //  String valor=converteValores(total_de_todas_compras,todoTotal);
-              //  guardaTotal(Tdvalor);
                 totalCompras.setText("R$ "+Tdvalor);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
@@ -625,11 +624,11 @@ public class CalcularCompras extends AppCompatActivity {
         }
     }
 
-  /*  public  void salvar(double valor){
+    public  void salvar(double valor){
         ModelCalculor cal = new ModelCalculor();
         cal.setTotal(valor);
-        long id = bancoCompras.inserir(cal);
+        long id = BD.inserir(cal);
         Toast.makeText(this, "Id salvo "+id, Toast.LENGTH_SHORT).show();
-    }*/
+    }
 
 }
