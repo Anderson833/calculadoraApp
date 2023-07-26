@@ -33,21 +33,21 @@ public class Bd {
     public long inserir(ModelCalculor cal){
         ContentValues valores = new ContentValues();
         valores.put("total",cal.getTotal());
-      return   BD.insert("compras",null,valores);
+      return   BD.insert("operacao",null,valores);
     }
 
     public void deletaDados(ModelCalculor modelo){
-        BD.delete("compras","id="+modelo.getId(),null);
+        BD.delete("operacao","id="+modelo.getId(),null);
     }
     public void deletaTodosDados(){
         BD.delete("compras",null,null);
     }
     public void atualizar(ModelCalculor md){
-        BD.isOpen();
+       // BD.isOpen();
         ContentValues valores = new ContentValues();
         valores.put("total",md.getTotal());
-        BD.update("compras",valores,"id=?",new String[]{String.valueOf(md.getId())});
-        BD.close();
+        BD.update("operacao",valores,"id=?",new String[]{String.valueOf(md.getId())});
+      //  BD.close();
     }
 
 
@@ -56,15 +56,10 @@ public class Bd {
         List<ModelCalculor> lista = new ArrayList<>();
         String colunas []= new String []{"id","total"};
         Cursor bb;
-      //  bb=BD.rawQuery("select Max(total) as total from operacao",null);
-       //  bb=BD.query("operacao",colunas,null,null,null,null,null)
-        String x="id";
         BD=this.conexao.getReadableDatabase();
         bb=BD.rawQuery("select * from operacao ",null);
         bb.moveToFirst();
         if(bb.getCount()>0){
-
-
             while (bb.moveToNext()){
                 ModelCalculor MD = new ModelCalculor();
                // bb.getString(0);
@@ -78,30 +73,16 @@ public class Bd {
         return lista;
     }
 
-    public List<ModelCalculor> buscarId(int id){
-        BD.isOpen();
-        List<ModelCalculor> lista = new ArrayList<>();
-        String colunas []= new String []{"id","total"};
+    public double buscarTotalPeloId(){
+        double valor=0;
         Cursor bb;
-        //  bb=BD.rawQuery("select Max(total) as total from operacao",null);
-        //  bb=BD.query("operacao",colunas,null,null,null,null,null)
-        String x="id";
-        BD=this.conexao.getReadableDatabase();
-        bb=BD.rawQuery("select total from operacao where id ="+id,null);
-        bb.moveToFirst();
+        bb=BD.rawQuery("select total from operacao where id=60",null);
         if(bb.getCount()>0){
-
-
             while (bb.moveToNext()){
                 ModelCalculor MD = new ModelCalculor();
-                // bb.getString(0);
-                //  int index= bb.getColumnIndex("");
-                MD.setId(bb.getInt(0));
-               // MD.setTotal(bb.getDouble(1));
-                lista.add(MD);
+              valor=bb.getDouble(0);
             }
-            BD.close();
         }
-        return lista;
+        return valor;
     }
 }

@@ -29,13 +29,13 @@ public class BdConexao extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-      db.execSQL("create table compras(id integer primary key autoincrement,total double);");
+      db.execSQL("create table operacao(id integer primary key autoincrement,total double);");
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-       db.execSQL("drop table compras;");
+       db.execSQL("drop table operacao;");
        onCreate(db);
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * Essa classe  tem o objetivo de fazer os calculos das compras em varejo
@@ -96,8 +97,8 @@ public class CalcularCompras extends AppCompatActivity {
             }
         });
 
-     //   bd= Room.databaseBuilder(getApplicationContext(),MyBd.class,"BdCompras").build();
-
+     // método para exibir o total do banco de dados
+    setaTotal();
     }
 
 
@@ -190,9 +191,12 @@ public class CalcularCompras extends AppCompatActivity {
         cont++;
         if(cont==1){
          DIGITO_OFF.setText("ON");
+         totalCompras.setText("R$ 0,00");
         }else {
             cont=0;
             DIGITO_OFF.setText("OFF");
+            setaTotal();
+            deletaValores(view);
         }
 
     }
@@ -217,164 +221,46 @@ public class CalcularCompras extends AppCompatActivity {
      */
     public void setaIgual(View view){
 
-        if(espresso.getText().toString().isEmpty()){
+         if(DIGITO_OFF.getText().toString().equals("ON")){
+             opcaoOn();
+         }else {
 
-        }else {
-        // Condições para realizar as operações
-        if(sinal=='+'){
-            valorTotal(sinal);
-        }
-        if(sinal=='-'){
-            valorTotal(sinal);
-        }
-        if(sinal=='*'){
-            valorTotal(sinal);
-        }
-        if(sinal=='/') {
-            valorTotal(sinal);
-        } }
-    }
-
-    /**
-     * Método para calculor os valores conforme o sinal passado no paramentro
-     * @param sinal
-     * @return O total
-     */
-    public double valorTotal(char sinal){
-        //Variavel para armazenar o total de cada operação
-        double resultado=0;
-        // condição para saber se os sinal das operações estão corretas
-        if(operacao==true){
-            // caso não esteja nada acontecer
-        }else{
-            // caso esteja será executado o calculor
-
-        // condição para as opções
-        if(DIGITO_OFF.getText().toString().equals("OFF")){
-            //Variavel para armazenar o total de cada operação
-            // recebendo o sinal do paramentro
-            switch (sinal) {
-                case '-':
-                {
-                    // Operação para fazer a subtração
-                    String []md=espresso.getText().toString().split("-");
-                    String p1=md[0];
-                    String p2=md[1];
-                  //  double total=valorP1-valorP2;
-                    resultado= resultado=retornaTodototal(p1,p2,'-');;
-                    break;
-                }
-                case '+':
-                {
-                    // Operação para fazer a adição
-                    String []md=espresso.getText().toString().replace("+"," ").split(" ");
-                    String p1=md[0];
-                    String p2=md[1];
-                    // Corrigir ação para quando o index 1 tiver com sinal de ponto
-                        resultado=retornaTodototal(p1,p2,'+');
-
-                    break;
-                }
-                case '*':
-                {
-                    // Operação para fazer a multiplicação
-                    String []md=espresso.getText().toString().replace("*"," ").split(" ");
-                    String p1=md[0];
-                    String p2=md[1];
-                    //double total=valorP1*valorP2;
-                    resultado= resultado=retornaTodototal(p1,p2,'*');;
-                    break;
-                }
-                case '/':
-                {
-                    // Operação para fazer a divisão
-                    String []md=espresso.getText().toString().split("/");
-                    String p1=md[0];
-                    String p2=md[1];
-                   // double total=valorP1/valorP2;
-                    resultado= resultado=retornaTodototal(p1,p2,'/');;
-                    break;
-                }
-                default:
-                    break;
-            }
-
-        }else {
-
-            // recebendo o sinal do paramentro
-            switch (sinal) {
-                case '-': {
-                    // Operação para fazer a subtração
-                    String[] md = espresso.getText().toString().split("-");
-                    String p1 = md[0];
-                    String p2 = md[1];
-                    double valorP1 = Double.parseDouble(p1);
-                    double valorP2 = Double.parseDouble(p2);
-                    double total = valorP1 - valorP2;
-                    espressaResultado.setText("" + total);
-                    espresso.setText("");
-                    resultado = total;
-                    break;
-                }
-                case '+': {
-                    // Operação para fazer a adição
-                    String[] md = espresso.getText().toString().replace("+", " ").split(" ");
-                    String p1 = md[0];
-                    String p2 = md[1];
-                    double valorP1 = Double.parseDouble(p1);
-                    double valorP2 = Double.parseDouble(p2);
-                    double total = valorP1 + valorP2;
-                    espressaResultado.setText("" + total);
-                    espresso.setText("");
-                    resultado = total;
-                    break;
-                }
-                case '*': {
-                    // Operação para fazer a multiplicação
-                    String[] md = espresso.getText().toString().replace("*", " ").split(" ");
-                    String p1 = md[0];
-                    String p2 = md[1];
-                    double valorP1 = Double.parseDouble(p1);
-                    double valorP2 = Double.parseDouble(p2);
-                    double total = valorP1 * valorP2;
-                    espressaResultado.setText("" + total);
-                    espresso.setText("");
-                    resultado = total;
-                    break;
-                }
-                case '/': {
-                    // Operação para fazer a divisão
-                    String[] md = espresso.getText().toString().split("/");
-                    String p1 = md[0];
-                    String p2 = md[1];
-                    double valorP1 = Double.parseDouble(p1);
-                    double valorP2 = Double.parseDouble(p2);
-                    double total = valorP1 / valorP2;
-                    espressaResultado.setText("" + total);
-                    espresso.setText("");
-                    resultado = total;
-                    break;
-                }
-                default:
-                    break;
-            }
+             String dados = espresso.getText().toString();
+             if (espresso.getText().toString().isEmpty()) {
+             } else {
+                 // Condições para realizar as operações
+                 if (dados.contains("+") && operacao == false) {
+                     retornaTodototal();
+                 }
+                 if (dados.contains("-") && operacao == false) {
+                     retornaTodototal();
+                 }
+                 if (dados.contains("*") && operacao == false) {
+                     retornaTodototal();
+                 }
+                 if (dados.contains("/") && operacao == false) {
+                     retornaTodototal();
+                 }
+             }
          }
-        }
-        // retorna o total da operação que foi executada
-        return resultado;
     }
 
     /**
      * Método  para calcular as operações comforme os valores e um sinal da operação passada nos parametros
-     * @param p1
-     * @param p2
-     * @param sinal
+     * @param
+     * @param
+     * @param
      * @return Todor total calculado pelo sistema
      */
-    public  double retornaTodototal(String p1,String p2, char sinal){
-        if(sinal=='+'){
-            double valorP1 =Double.parseDouble(p1);
-            double valorP2 =Double.parseDouble(p2);
+    public  double retornaTodototal(){
+        String global=espresso.getText().toString();
+        if(global.contains("+")){
+            String index=espresso.getText().toString();
+            String dados[]=index.replace("+"," ").split(" ");
+            String ix0=dados[0];
+            String ix1=dados[1];
+            double valorP1 =Double.parseDouble(ix0);
+            double valorP2 =Double.parseDouble(ix1);
             double total=valorP1+valorP2;
           //  String ttl=df.format(total);
             espressaResultado.setText("   "+espresso.getText().toString());
@@ -384,36 +270,47 @@ public class CalcularCompras extends AppCompatActivity {
                 total_de_todas_compras=todoTotal;
                 String valorTotal=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+valorTotal);
-             /*   Dados d = new Dados();
-                d.setTodoTotal(total_de_todas_compras);
-                d.getTodoTotal();
-                bd.daoDados().insert(d);*/
-           //   String totalOp=converteValores(total_de_todas_compras,todoTotal);
-             //   guardaTotal(valorTotal);
+                //Método para alterar o valor
+                alteraValor(total_de_todas_compras);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
                 espresso.setText("");
                 opcaoTotal=false;
             }else if(opcaoTotal==false){
-                double tdTotal=total_de_todas_compras=total_de_todas_compras+todoTotal;
+                double td=BD.buscarTotalPeloId();
+                double tdTotal=td+todoTotal;
                 String Tdvalor=decimalFormat.format(tdTotal);
-               // double calculor=Double.parseDouble(espressaResultado.getText().toString());
-                salvar(tdTotal);
-            //  String valor=converteValores(total_de_todas_compras,todoTotal);
+                //Método para alterar o valor
+                alteraValor(tdTotal);
                 totalCompras.setText("R$ "+Tdvalor);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
                 espresso.setText("");
             }
               // opcaoTotal=false;
-        } else if (sinal=='-') {
-            double valorP1 =Double.parseDouble(p1);
-            double valorP2 =Double.parseDouble(p2);
+        } else if (global.contains("-")) {
+            String index=espresso.getText().toString();
+            String dados[]=index.split("-");
+            String ix0=dados[0];
+            String ix1=dados[1];
+            double valorP1 =Double.parseDouble(ix0);
+            double valorP2 =Double.parseDouble(ix1);
             double total=valorP1-valorP2;
+
+            if(valorP1<valorP2){
+                String valor=String.valueOf(total);
+                String tiraNegativo=valor.replace("-"," ");
+                double vl=Double.parseDouble(tiraNegativo);
+                todoTotal=vl;
+            }else{
+                todoTotal=total;
+            }
             espressaResultado.setText("   "+espresso.getText().toString());
-            todoTotal=total;
+
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
+                //Método para alterar o valor
+                 alteraValor(total_de_todas_compras);
                 String opTotalCompras=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+opTotalCompras);
                 String opTotalRc=decimalFormat.format(todoTotal);
@@ -426,14 +323,20 @@ public class CalcularCompras extends AppCompatActivity {
                 espresso.setText("");
             }
 
-        }else if (sinal=='/') {
-            double valorP1 =Double.parseDouble(p1);
-            double valorP2 =Double.parseDouble(p2);
+        }else if (global.contains("/")) {
+            String index=espresso.getText().toString();
+            String dados[]=index.split("/");
+            String ix0=dados[0];
+            String ix1=dados[1];
+            double valorP1 =Double.parseDouble(ix0);
+            double valorP2 =Double.parseDouble(ix1);
             double total=valorP1/valorP2;
             espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
+                //Método para alterar o valor
+                alteraValor(total_de_todas_compras);
                 String optotalCps=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+optotalCps);
                 String totalNormal=decimalFormat.format(todoTotal);
@@ -446,26 +349,27 @@ public class CalcularCompras extends AppCompatActivity {
                 espresso.setText("");
             }
 
-        }else if (sinal=='*') {
-            double valorP1 =Double.parseDouble(p1);
-            double valorP2 =Double.parseDouble(p2);
+        }else if (global.contains("*")) {
+            String index=espresso.getText().toString();
+            String dados[]=index.replace("*"," ").split(" ");
+            String ix0=dados[0];
+            String ix1=dados[1];
+            double valorP1 =Double.parseDouble(ix0);
+            double valorP2 =Double.parseDouble(ix1);
             double total=valorP1*valorP2;
             espressaResultado.setText("   "+espresso.getText().toString());
             todoTotal=total;
             if(opcaoTotal){
-              /*  double valortotal=total_de_todas_compras+todoTotal;
-                String totalCompra=decimalFormat.format(valortotal);
-                //  guardaTotal(totalCompra);
-                totalCompras.setText("R$ "+totalCompra);*/
                  String opcaoTodoTotal=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+opcaoTodoTotal);
                 espresso.setText("");
                 opcaoTotal=false;
             }else{
-                double valortotal=total_de_todas_compras=total_de_todas_compras+todoTotal;
+                double bdTotal=BD.buscarTotalPeloId();
+                double valortotal=bdTotal+todoTotal;
                 String totalCompra=decimalFormat.format(valortotal);
-              //  guardaTotal(totalCompra);
-
+                //Método para alterar o valor
+                alteraValor(valortotal);
                 totalCompras.setText("R$ "+totalCompra);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
@@ -529,8 +433,10 @@ public class CalcularCompras extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 espressaResultado.setText("");
                 total_de_todas_compras=0;
-                totalCompras.setText("R$ "+total_de_todas_compras);
+                alteraValor(total_de_todas_compras);
+                totalCompras.setText("R$ "+BD.buscarTotalPeloId());
                 todo_Total.setText("");
+                espresso.setText("");
                 Toast.makeText(CalcularCompras.this, "Todo total excluido!", Toast.LENGTH_SHORT).show();
 
             }
@@ -577,10 +483,10 @@ public class CalcularCompras extends AppCompatActivity {
      * Método para deletar todor total das operações
      * @param view
      */
-    public void deletaTdTotal(View view){
-        double zeraTotal=total_de_todas_compras=0;
-        String convert=decimalFormat.format(zeraTotal);
-     totalCompras.setText("R$ "+convert);
+    public void deletaValores(View view){
+      espresso.setText("");
+      espressaResultado.setText("");
+      todo_Total.setText("");
     }
 
     /**
@@ -588,15 +494,15 @@ public class CalcularCompras extends AppCompatActivity {
      * @param view
      */
     public void setaTotalNaExpressa(View view){
-
-        if(total_de_todas_compras==0){
+        if(BD.buscarTotalPeloId()==0){
             espresso.setText("");
         }else {
             // Nesse caso vai realizar um tipo de operação especificar com
             // a variável opcaoTotal recebendo valor de true
             opcaoTotal=true;
          //   double setaTotal=Double.parseDouble(totalCompras.getText().toString().replace("R$ ",""));
-            espresso.setText(""+total_de_todas_compras);
+            String format=decimalFormat.format(BD.buscarTotalPeloId()).replace(",",".");
+            espresso.setText(format);
         }
     }
 
@@ -624,6 +530,23 @@ public class CalcularCompras extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método para altera o total no banco de dados
+     * @param valor
+     */
+    public void alteraValor(double valor){
+        ModelCalculor m = new ModelCalculor();
+        m.setId(60);
+        m.setTotal(valor);
+        BD.atualizar(m);
+      double total=BD.buscarTotalPeloId();
+        Toast.makeText(this, "Id 60 ATUALIZADO "+total, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Método para adiconar no banco de dados
+     * @param valor
+     */
     public  void salvar(double valor){
         ModelCalculor cal = new ModelCalculor();
         cal.setTotal(valor);
@@ -631,4 +554,65 @@ public class CalcularCompras extends AppCompatActivity {
         Toast.makeText(this, "Id salvo "+id, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Método para seta o valor total da coluna total do banco de dados
+     */
+    public  void setaTotal(){
+        double total=BD.buscarTotalPeloId();
+        String Tdvalor=decimalFormat.format(total);
+        totalCompras.setText(" R$ "+Tdvalor);
+       //espresso.setText(""+total);
+    }
+
+    public void opcaoOn() {
+        String conteudo = espresso.getText().toString();
+        if (conteudo.contains("+")) {
+            String index[] = conteudo.replace("+", " ").split(" ");
+            String i0 = index[0];
+            String i1 = index[1];
+            double x0 = Double.parseDouble(i0);
+            double x1 = Double.parseDouble(i1);
+            double t = x0 + x1;
+            String dc=decimalFormat.format(t);
+            espressaResultado.setText("  " + conteudo);
+            todo_Total.setText(" R$ " + dc);
+            espresso.setText("");
+        } else if (conteudo.contains("-")) {
+            String index[] = conteudo.split("-");
+            String i0 = index[0];
+            String i1 = index[1];
+            double x0 = Double.parseDouble(i0);
+            double x1 = Double.parseDouble(i1);
+            double t = x0 - x1;
+            String dc=decimalFormat.format(t);
+            espressaResultado.setText("  " + conteudo);
+            todo_Total.setText(" R$ " + dc);
+            espresso.setText("");
+
+        }else if (conteudo.contains("/")) {
+            String index[] = conteudo.split("/");
+            String i0 = index[0];
+            String i1 = index[1];
+            double x0 = Double.parseDouble(i0);
+            double x1 = Double.parseDouble(i1);
+            double t = x0/x1;
+            String dc=decimalFormat.format(t);
+            espressaResultado.setText("  " + conteudo);
+            todo_Total.setText(" R$ " +dc);
+            espresso.setText("");
+
+        }else if (conteudo.contains("*")) {
+            String index[] = conteudo.replace("*"," ").split(" ");
+            String i0 = index[0];
+            String i1 = index[1];
+            double x0 = Double.parseDouble(i0);
+            double x1 = Double.parseDouble(i1);
+            double t = x0*x1;
+            String dc=decimalFormat.format(t);
+            espressaResultado.setText("  " + conteudo);
+            todo_Total.setText(" R$ " +dc);
+            espresso.setText("");
+
+        }
+    }
 }
