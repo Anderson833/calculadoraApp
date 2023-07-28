@@ -7,7 +7,7 @@
     android:gravity="center"
     android:layout_marginLeft="3dp"
     android:background="@drawable/backgraund_view"
-    android:layout_marginTop="40dp"
+    android:layout_marginTop="30dp"
     android:padding="20dp"
     android:layout_height="wrap_content"
     android:id="@+id/lineP"
@@ -148,6 +148,7 @@
                     android:layout_height="50dp"
                     android:layout_width="140dp"
                     android:textSize="24sp"
+                    android:maxLines="1"
                     android:layout_gravity="center"
                     android:textColor="@color/black"
                     >

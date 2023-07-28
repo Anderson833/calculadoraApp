@@ -24,7 +24,7 @@ public class CalcularCompras extends AppCompatActivity {
      private int cont=0, operacoes=0;
      // Variável para fazer as manipulações do banco de dados
       private Bd BD;
-     private  String dados="";
+     private  String dados="", valorFixo="",valorAdicionado="";
      // variáveis do tipo TextView para pegar os dados que foi digitados no campo
     private TextView espresso, espressaResultado,digitoClimpar,DIGITO_OFF,DIGITO_OP,CEtUDO, todo_Total, totalCompras;
     @Override
@@ -209,11 +209,15 @@ public class CalcularCompras extends AppCompatActivity {
      */
     public void setaPonto(View view){
         sinal='.';
-        if(espresso.getText().toString().isEmpty()){
+        String expressao=espresso.getText().toString();
+        if(expressao.isEmpty()){
+            espresso.setText(espresso.getText()+"0.");
         }else{
             espresso.setText(espresso.getText()+".");
         }
     }
+
+
 
     /**
      *  Método para executar o calculor ao clicar no botão igual
@@ -224,9 +228,8 @@ public class CalcularCompras extends AppCompatActivity {
          if(DIGITO_OFF.getText().toString().equals("ON")){
              opcaoOn();
          }else {
-
              String dados = espresso.getText().toString();
-             if (espresso.getText().toString().isEmpty()) {
+             if (dados.isEmpty()) {
              } else {
                  // Condições para realizar as operações
                  if (dados.contains("+") && operacao == false) {
@@ -259,6 +262,7 @@ public class CalcularCompras extends AppCompatActivity {
             String dados[]=index.replace("+"," ").split(" ");
             String ix0=dados[0];
             String ix1=dados[1];
+
             double valorP1 =Double.parseDouble(ix0);
             double valorP2 =Double.parseDouble(ix1);
             double total=valorP1+valorP2;
@@ -296,7 +300,6 @@ public class CalcularCompras extends AppCompatActivity {
             double valorP1 =Double.parseDouble(ix0);
             double valorP2 =Double.parseDouble(ix1);
             double total=valorP1-valorP2;
-
             if(valorP1<valorP2){
                 String valor=String.valueOf(total);
                 String tiraNegativo=valor.replace("-"," ");
@@ -404,6 +407,7 @@ public class CalcularCompras extends AppCompatActivity {
         }
     }
 
+
     /**
      * Método para limpar por cada caracteres
      * @param view
@@ -413,7 +417,12 @@ public class CalcularCompras extends AppCompatActivity {
         if(dgt.isEmpty()){
         }else{
             espresso.setText(dgt.substring(0,dgt.length()-1));
-          //  espressaResultado.setText("");
+            if(opcaoTotal){
+               espresso.setText("");
+             opcaoTotal=false;
+            }else{
+                opcaoTotal=false;
+            }
         }
     }
 
@@ -500,6 +509,7 @@ public class CalcularCompras extends AppCompatActivity {
             // Nesse caso vai realizar um tipo de operação especificar com
             // a variável opcaoTotal recebendo valor de true
             opcaoTotal=true;
+            valorFixo=espresso.getText().toString();
          //   double setaTotal=Double.parseDouble(totalCompras.getText().toString().replace("R$ ",""));
             String format=decimalFormat.format(BD.buscarTotalPeloId()).replace(",",".");
             espresso.setText(format);
@@ -540,7 +550,11 @@ public class CalcularCompras extends AppCompatActivity {
         m.setTotal(valor);
         BD.atualizar(m);
       double total=BD.buscarTotalPeloId();
-        Toast.makeText(this, "Id 60 ATUALIZADO "+total, Toast.LENGTH_SHORT).show();
+      if(total==0){
+         // Toast.makeText(this, "Total Zerado! "+total, Toast.LENGTH_SHORT).show();
+      }else {
+          Toast.makeText(this, "Total Atualizado! " + total, Toast.LENGTH_SHORT).show();
+      }
     }
 
     /**

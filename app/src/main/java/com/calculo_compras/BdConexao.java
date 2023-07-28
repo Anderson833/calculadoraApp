@@ -23,7 +23,7 @@ public class BdConexao extends SQLiteOpenHelper {
 
     public BdConexao(Context context) {
         super(context, nomeBd, null, version);
-        Toast.makeText(context, "Database criada com sucesso", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(context, "Database criada com sucesso", Toast.LENGTH_SHORT).show();
     }
 
 
