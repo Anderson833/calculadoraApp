@@ -574,7 +574,7 @@ public class CalcularCompras extends AppCompatActivity {
     public  void setaTotal(){
         double total=BD.buscarTotalPeloId();
         String Tdvalor=decimalFormat.format(total);
-        totalCompras.setText(" R$ "+Tdvalor);
+        totalCompras.setText("R$ "+Tdvalor);
        //espresso.setText(""+total);
     }
 

@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Calculo_compras"
         tools:targetApi="31">
         <activity
-            android:name=".LogoApp"
+            android:name=".CalcularCompras"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -21,7 +21,7 @@
             android:name=".ListaDadosActivity"
             android:exported="false" />
         <activity
-            android:name=".CalcularCompras"
+            android:name=".LogoApp"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
