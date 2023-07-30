@@ -20,7 +20,7 @@ public class CalcularCompras extends AppCompatActivity {
      // Variáveis feitas na linha de baixo é para armazenar os números digitados e os simbolos das operações
      private  char sinal,digito;
      // Variáveis contruidas na linha debaixo serve para armazenar os totais dos calculos
-     private double todoTotal=0, total_de_todas_compras;
+     private double todoTotal=0, total_de_todas_compras, ValorDoBanco=0;
      private int cont=0, operacoes=0;
      // Variável para fazer as manipulações do banco de dados
       private Bd BD;
@@ -98,7 +98,7 @@ public class CalcularCompras extends AppCompatActivity {
         });
 
      // método para exibir o total do banco de dados
-    setaTotal();
+     setaTotal();
     }
 
 
@@ -241,12 +241,11 @@ public class CalcularCompras extends AppCompatActivity {
                  if (dados.contains("*") && operacao == false) {
                      retornaTodototal();
                  }
-                 if (dados.contains("/") && operacao == false) {
-                     retornaTodototal();
+                 if (dados.contains("/") && operacao == false) retornaTodototal();
                  }
              }
          }
-    }
+
 
     /**
      * Método  para calcular as operações comforme os valores e um sinal da operação passada nos parametros
@@ -274,18 +273,18 @@ public class CalcularCompras extends AppCompatActivity {
                 total_de_todas_compras=todoTotal;
                 String valorTotal=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+valorTotal);
-                //Método para alterar o valor
-                alteraValor(total_de_todas_compras);
+              //Método para altera ou salvar valor
+                verificaId(total_de_todas_compras);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
                 espresso.setText("");
                 opcaoTotal=false;
             }else if(opcaoTotal==false){
-                double td=BD.buscarTotalPeloId();
-                double tdTotal=td+todoTotal;
+
+                double tdTotal=ValorDoBanco+todoTotal;
                 String Tdvalor=decimalFormat.format(tdTotal);
-                //Método para alterar o valor
-                alteraValor(tdTotal);
+            //Método para alterar ou salvar valor
+                verificaId(tdTotal);
                 totalCompras.setText("R$ "+Tdvalor);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
@@ -312,8 +311,8 @@ public class CalcularCompras extends AppCompatActivity {
 
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
-                //Método para alterar o valor
-                 alteraValor(total_de_todas_compras);
+                //Método para alterar ou salvar
+                verificaId(total_de_todas_compras);
                 String opTotalCompras=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+opTotalCompras);
                 String opTotalRc=decimalFormat.format(todoTotal);
@@ -338,8 +337,8 @@ public class CalcularCompras extends AppCompatActivity {
             todoTotal=total;
             if(opcaoTotal){
                 total_de_todas_compras=todoTotal;
-                //Método para alterar o valor
-                alteraValor(total_de_todas_compras);
+                //Método para alterar ou salvar
+                verificaId(total_de_todas_compras);
                 String optotalCps=decimalFormat.format(total_de_todas_compras);
                 totalCompras.setText("R$ "+optotalCps);
                 String totalNormal=decimalFormat.format(todoTotal);
@@ -368,11 +367,11 @@ public class CalcularCompras extends AppCompatActivity {
                 espresso.setText("");
                 opcaoTotal=false;
             }else{
-                double bdTotal=BD.buscarTotalPeloId();
-                double valortotal=bdTotal+todoTotal;
+
+                double valortotal=ValorDoBanco+todoTotal;
                 String totalCompra=decimalFormat.format(valortotal);
-                //Método para alterar o valor
-                alteraValor(valortotal);
+                //Método para alterar ou salvar valor
+                verificaId(valortotal);
                 totalCompras.setText("R$ "+totalCompra);
                 String totalRc=decimalFormat.format(todoTotal);
                 todo_Total.setText("R$ "+totalRc);
@@ -441,9 +440,9 @@ public class CalcularCompras extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 espressaResultado.setText("");
-                total_de_todas_compras=0;
-                alteraValor(total_de_todas_compras);
-                totalCompras.setText("R$ "+BD.buscarTotalPeloId());
+              ValorDoBanco=total_de_todas_compras=0;
+              //  alteraValor(total_de_todas_compras);
+                totalCompras.setText("R$ "+ValorDoBanco);
                 todo_Total.setText("");
                 espresso.setText("");
                 Toast.makeText(CalcularCompras.this, "Todo total excluido!", Toast.LENGTH_SHORT).show();
@@ -503,16 +502,19 @@ public class CalcularCompras extends AppCompatActivity {
      * @param view
      */
     public void setaTotalNaExpressa(View view){
-        if(BD.buscarTotalPeloId()==0){
+        if(ValorDoBanco==0){
             espresso.setText("");
         }else {
-            // Nesse caso vai realizar um tipo de operação especificar com
-            // a variável opcaoTotal recebendo valor de true
-            opcaoTotal=true;
-            valorFixo=espresso.getText().toString();
-         //   double setaTotal=Double.parseDouble(totalCompras.getText().toString().replace("R$ ",""));
-            String format=decimalFormat.format(BD.buscarTotalPeloId()).replace(",",".");
-            espresso.setText(format);
+            //Condição para saber se a opcão está ON OU OFF
+            if (DIGITO_OFF.getText().toString().equals("ON")) {
+
+            } else {
+                // a variável opcaoTotal recebendo valor de true
+                opcaoTotal = true;
+                //   double setaTotal=Double.parseDouble(totalCompras.getText().toString().replace("R$ ",""));
+                String format = decimalFormat.format(ValorDoBanco).replace(",", ".");
+                espresso.setText(format);
+            }
         }
     }
 
@@ -544,16 +546,16 @@ public class CalcularCompras extends AppCompatActivity {
      * Método para altera o total no banco de dados
      * @param valor
      */
-    public void alteraValor(double valor){
+    public void alteraValor(double valor,int codigo){
         ModelCalculor m = new ModelCalculor();
-        m.setId(60);
+        m.setId(codigo);
         m.setTotal(valor);
         BD.atualizar(m);
-      double total=BD.buscarTotalPeloId();
-      if(total==0){
-         // Toast.makeText(this, "Total Zerado! "+total, Toast.LENGTH_SHORT).show();
+      ValorDoBanco =BD.setaId(codigo);
+      if(ValorDoBanco==0){
+          Toast.makeText(this, "Total Zerado! "+ValorDoBanco, Toast.LENGTH_SHORT).show();
       }else {
-          Toast.makeText(this, "Total Atualizado! " + total, Toast.LENGTH_SHORT).show();
+          Toast.makeText(this, "Total Atualizado! " +ValorDoBanco, Toast.LENGTH_SHORT).show();
       }
     }
 
@@ -569,15 +571,32 @@ public class CalcularCompras extends AppCompatActivity {
     }
 
     /**
-     * Método para seta o valor total da coluna total do banco de dados
+     * Método para verificar id para salvar ou alterar valor total
+     * @param valor
+     */
+    public  void verificaId(double valor){
+         //Condição para saber se tem valor salvo no banco de dados
+        if(BD.buscarPorId()>0){
+            //Método para atualizar o valor total
+            alteraValor(valor,BD.buscarPorId());
+        }else{
+            //Método para salvar no banco de dados
+            salvar(valor);
+        }
+    }
+    /**
+     * Método para seta o valor total da coluna total do banco de dados ao abrir o app
      */
     public  void setaTotal(){
-        double total=BD.buscarTotalPeloId();
-        String Tdvalor=decimalFormat.format(total);
+        ValorDoBanco= BD.setaId(BD.buscarPorId());
+        String Tdvalor=decimalFormat.format(ValorDoBanco);
         totalCompras.setText("R$ "+Tdvalor);
        //espresso.setText(""+total);
     }
 
+    /**
+     * Método para calcular sem armazenar os valores no banco de dados
+     */
     public void opcaoOn() {
         String conteudo = espresso.getText().toString();
         if (conteudo.contains("+")) {

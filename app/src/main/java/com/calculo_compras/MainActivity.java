@@ -1,7 +1,5 @@
 package com.calculo_compras;
 
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +16,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private RadioGroup btGrupoo;
-    private EditText  PRECO,QTD;
-    private  Button calc;
+    private EditText PRECO,QTD;
+    private Button calc;
     private TextView total;
     private Bd  dao;
     private SQLiteDatabase BD;
@@ -31,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       btGrupoo = findViewById(R.id.btGrupo);
-     //   calc = (Button) findViewById(R.id.btCalc);
+        btGrupoo = findViewById(R.id.btGrupo);
+        //   calc = (Button) findViewById(R.id.btCalc);
         total = findViewById(R.id.Totaldamultiplicacao);
         PRECO = findViewById(R.id.Preco);
         QTD = findViewById(R.id.Qtd);
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     //  String QtdIndicada=QTD.getText().toString();
                     total.setText("Total: " + soma);
                     if (prc==0&&qtd==0){
-                       soma=0;
+                        soma=0;
                         total.setText("Total: " + soma);
                     }
                     //    QTD.setText(""+soma);
@@ -146,29 +145,29 @@ public class MainActivity extends AppCompatActivity {
         return campos;
     }
 
-  public void setaTotal(){
-      for(ModelCalculor m:dao.buscar()){
-          if(m.getId()==52){
-              Toast.makeText(this, "Valor anterior ", Toast.LENGTH_SHORT).show();
-              total.setText("Total: "+m.getTotal());
-          }
+    public void setaTotal(){
+        for(ModelCalculor m:dao.buscar()){
+            if(m.getId()==52){
+                Toast.makeText(this, "Valor anterior ", Toast.LENGTH_SHORT).show();
+                total.setText("Total: "+m.getTotal());
+            }
 
-      }
-  }
+        }
+    }
 
 
-   public  void salvar(double valor){
-    ModelCalculor m = new ModelCalculor();
+    public  void salvar(double valor){
+        ModelCalculor m = new ModelCalculor();
         m.setTotal(valor);
         long id = dao.inserir(m);
         Toast.makeText(this, "Id salvo "+id, Toast.LENGTH_SHORT).show();
     }
-     public void deletaTotal(){
+    public void deletaTotal(){
         ModelCalculor md = new ModelCalculor();
         md.setId(45);
         dao.deletaDados(md);
-         Toast.makeText(this, "Dado deletado com sucesso", Toast.LENGTH_SHORT).show();
-     }
+        Toast.makeText(this, "Dado deletado com sucesso", Toast.LENGTH_SHORT).show();
+    }
     public void deletaTodosTotais(){
 
         dao.deletaTodosDados();
@@ -178,8 +177,8 @@ public class MainActivity extends AppCompatActivity {
         ModelCalculor m = new ModelCalculor();
         m.setId(52);
         m.setTotal(Double.parseDouble(QTD .getText().toString()));
-       // m.setTotal();
-         dao.atualizar(m);
+        // m.setTotal();
+        dao.atualizar(m);
         Toast.makeText(this, "Id 51 ATUALIZADO ", Toast.LENGTH_SHORT).show();
     }
 
@@ -240,5 +239,4 @@ public class MainActivity extends AppCompatActivity {
         }
      }
 */
-
 }
